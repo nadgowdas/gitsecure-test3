@@ -254,3 +254,39 @@ spec:
       persistentVolumeClaim:
         claimName: $(inputs.params.task-pvc)
 
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: gitsecure-ossc-task
+spec:
+  inputs:
+    params:
+      - name: task-pvc
+        description: the output pvc
+      - name: revision
+        description: the revision
+        default: master
+      - name: prnumber
+        description: the git pr number
+      - name: apikey
+        description: the ibmcloud api key
+  steps:
+    - name: ossc
+      image: cmadam/ossc-toolchain
+      imagePullPolicy: Always
+      command:
+        - "python"
+        - "/ossc/ossc.py"
+      args:
+        - "--giturl"
+        -  $(inputs.params.repository)
+        - "--gitbranch"
+        -  $(inputs.params.revision)
+        - "--rigserviceapi"
+        - "http://169.47.180.148:30950"
+        - "--pr"
+        - $(inputs.params.prnumber)
+        - "--apikey"
+        - $(inputs.params.apikey)
+
