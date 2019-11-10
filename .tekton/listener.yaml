@@ -40,7 +40,7 @@ metadata:
 spec:
   params:
     - name: repository
-      value: "https://github.com/nadgowdas/gitsecure-test2"
+      value: "https://github.com/nadgowdas/gitsecure-test3"
     - name: revision
       value: $(event.pull_request.head.ref)
     - name: prnumber
