@@ -1,0 +1,256 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: gitsecure-discovery-task
+spec:
+  inputs:
+    params:
+      - name: task-pvc
+        description: the output pvc
+      - name: repository
+        description: the git repo
+      - name: revision
+        description: the revision
+        default: master
+  steps:
+    - name: clone-repo
+      image: alpine/git
+      env:
+        - name: REPOSITORY
+          value: $(inputs.params.repository)
+        - name: REVISION
+          value: $(inputs.params.revision)
+      command: ["/bin/sh", "-c"]
+      args:
+        - set -e -o pipefail;
+          echo "Cloning $REPOSITORY";
+          git clone -q -b $REVISION $REPOSITORY .;
+          pwd;
+          ls -lRth .;
+
+    - name: discovery
+      image: shri4u/rig:0.2
+      command:
+        - /go/src/github.ibm.com/rig/rig-app
+      args:
+        - "-giturl"
+        -  $(inputs.params.repository)
+        - "-gitbranch"
+        -  $(inputs.params.revision)
+        - "-repodir"
+        -  "/workspace"
+        - "-dburl"
+        - "bolt://169.47.180.157:30687"
+        - "-clairapi"
+        - "http://169.47.180.148:30890"
+        - "-pysafetyapi"
+        - "http://169.47.180.157:30892"
+        - "-pedigreeapi"
+        - "http://169.62.50.203:9940"
+      volumeMounts:
+        - mountPath: /artifacts
+          name: task-volume
+  volumes:
+    - name: task-volume
+      persistentVolumeClaim:
+        claimName: $(inputs.params.task-pvc)
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: gitsecure-remediation-task
+spec:
+  inputs:
+    params:
+      - name: task-pvc
+        description: the output pvc
+      - name: repository
+        description: the git repo
+      - name: revision
+        description: the revision
+        default: master
+      - name: prnumber
+        description: the git pr number
+      - name: apikey
+        description: the ibmcloud api key
+  steps:
+    - name: remediation
+      image: shri4u/rigrec:0.4
+      imagePullPolicy: Always
+      command:
+        - /go/src/github.ibm.com/rig-recommend/rig-recommend
+      args:
+        - "-giturl"
+        -  $(inputs.params.repository)
+        - "-gitbranch"
+        -  $(inputs.params.revision)
+        - "-repodir"
+        - "/workspace"
+        - "-rigserviceapi"
+        - "http://169.47.180.148:30950"
+        - "-pr"
+        - $(inputs.params.prnumber)
+        - "-apikey"
+        - $(inputs.params.apikey)
+      volumeMounts:
+        - mountPath: /artifacts
+          name: task-volume
+  volumes:
+    - name: task-volume
+      persistentVolumeClaim:
+        claimName: $(inputs.params.task-pvc)
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: gitsecure-cis-task
+spec:
+  inputs:
+    params:
+      - name: task-pvc
+        description: the output pvc
+      - name: repository
+        description: the git repo
+      - name: revision
+        description: the revision
+        default: master
+      - name: prnumber
+        description: the git pr number
+      - name: apikey
+        description: the ibmcloud api key
+  steps:
+    - name: clone-repo
+      image: alpine/git
+      env:
+        - name: REPOSITORY
+          value: $(inputs.params.repository)
+        - name: REVISION
+          value: $(inputs.params.revision)
+      command: ["/bin/sh", "-c"]
+      args:
+        - set -e -o pipefail;
+          echo "Cloning $REPOSITORY";
+          git clone -q -b $REVISION $REPOSITORY .;
+          pwd;
+
+    - name: cis
+      image: shri4u/cis-task:0.6
+      imagePullPolicy: Always
+      command:
+        - /go/src/github.ibm.com/rig-cis-task/bin/cis-task
+      args:
+        - "-giturl"
+        -  $(inputs.params.repository)
+        - "-gitbranch"
+        -  $(inputs.params.revision)
+        - "-repodir"
+        - "/workspace"
+        - "-rigserviceapi"
+        - "http://169.47.180.148:30950"
+        - "-pr"
+        - $(inputs.params.prnumber)
+        - "-apikey"
+        - $(inputs.params.apikey)
+      volumeMounts:
+        - mountPath: /artifacts
+          name: task-volume
+  volumes:
+    - name: task-volume
+      persistentVolumeClaim:
+        claimName: $(inputs.params.task-pvc)
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: gitsecure-bom-task
+spec:
+  inputs:
+    params:
+      - name: task-pvc
+        description: the output pvc
+      - name: repository
+        description: the git repo
+      - name: revision
+        description: the revision
+        default: master
+      - name: prnumber
+        description: the git pr number
+      - name: apikey
+        description: the ibmcloud api key
+  steps:
+    - name: bom
+      image: shri4u/rig-bom
+      imagePullPolicy: Always
+      command:
+        - /gitsecure/bom-task
+      args:
+        - "-giturl"
+        -  $(inputs.params.repository)
+        - "-gitbranch"
+        -  $(inputs.params.revision)
+        - "-rigserviceapi"
+        - "http://169.47.180.148:30950"
+        - "-pr"
+        - $(inputs.params.prnumber)
+        - "-apikey"
+        - $(inputs.params.apikey)
+
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: gitsecure-hadolint-task
+spec:
+  inputs:
+    params:
+      - name: task-pvc
+        description: the output pvc
+      - name: repository
+        description: the git repo
+      - name: revision
+        description: the revision
+        default: master
+      - name: prnumber
+        description: the git pr number
+      - name: apikey
+        description: the ibmcloud api key
+  steps:
+    - name: clone-repo
+      image: alpine/git
+      env:
+        - name: REPOSITORY
+          value: $(inputs.params.repository)
+        - name: REVISION
+          value: $(inputs.params.revision)
+      command: ["/bin/sh", "-c"]
+      args:
+        - set -e -o pipefail;
+          echo "Cloning $REPOSITORY";
+          git clone -q -b $REVISION $REPOSITORY .;
+
+    - name: hadolint
+      image: shri4u/rig-hadolint
+      imagePullPolicy: Always
+      command:
+        - /gitsecure/hadolint-task
+      args:
+        - "-giturl"
+        -  $(inputs.params.repository)
+        - "-gitbranch"
+        -  $(inputs.params.revision)
+        - "-rigserviceapi"
+        - "http://169.47.180.148:30950"
+        - "-pr"
+        - $(inputs.params.prnumber)
+        - "-apikey"
+        - $(inputs.params.apikey)
+        - "-repodir"
+        - "/workspace"
+      volumeMounts:
+        - mountPath: /artifacts
+          name: task-volume
+  volumes:
+    - name: task-volume
+      persistentVolumeClaim:
+        claimName: $(inputs.params.task-pvc)
+
