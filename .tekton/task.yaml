@@ -263,6 +263,8 @@ spec:
         - set -e -o pipefail;
           echo "Cloning $REPOSITORY";
           git clone -q -b $REVISION $REPOSITORY .;
+          pwd;
+          ls -lRth .;
     - name: hadolint
       image: shri4u/hadolint-task
       imagePullPolicy: Always
