@@ -100,3 +100,18 @@ spec:
           value: $(params.prnumber)
         - name: apikey
           value: $(params.apikey)
+    - name: pipeline-gitsecure-deployanalytics-task
+      runAfter: [pipeline-gitsecure-discovery-task]
+      taskRef:
+        name: gitsecure-deployanalytics-task
+      params:
+        - name: task-pvc
+          value: $(params.pipeline-pvc)
+        - name: repository
+          value: $(params.repository)
+        - name: revision
+          value: $(params.revision)
+        - name: prnumber
+          value: $(params.prnumber)
+        - name: apikey
+          value: $(params.apikey)
