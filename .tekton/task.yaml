@@ -249,6 +249,8 @@ spec:
     params:
       - name: task-pvc
         description: the output pvc
+      - name: repository
+        description: the git repo
       - name: revision
         description: the revision
         default: master
