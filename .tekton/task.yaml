@@ -25,9 +25,6 @@ spec:
         - set -e -o pipefail;
           echo "Cloning $REPOSITORY";
           git clone -q -b $REVISION $REPOSITORY .;
-          pwd;
-          ls -lRth .;
-
     - name: discovery
       image: shri4u/rig:0.2
       command:
@@ -131,8 +128,6 @@ spec:
         - set -e -o pipefail;
           echo "Cloning $REPOSITORY";
           git clone -q -b $REVISION $REPOSITORY .;
-          pwd;
-
     - name: cis
       image: shri4u/cis-task:0.6
       imagePullPolicy: Always
@@ -263,8 +258,6 @@ spec:
         - set -e -o pipefail;
           echo "Cloning $REPOSITORY";
           git clone -q -b $REVISION $REPOSITORY .;
-          pwd;
-          ls -lRth .;
     - name: hadolint
       image: shri4u/hadolint-task
       imagePullPolicy: Always
@@ -322,8 +315,6 @@ spec:
         - set -e -o pipefail;
           echo "Cloning $REPOSITORY";
           git clone -q -b $REVISION $REPOSITORY .;
-          pwd;
-          ls -lRth .;
     - name: deploy-analytics
       image: rofrano/deployment-checker
       imagePullPolicy: Always
