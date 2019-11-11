@@ -252,7 +252,7 @@ spec:
         description: the ibmcloud api key
   steps:
     - name: hadolint
-      image: shri4u/rig-hadolint
+      image: shri4u/hadolint-task
       imagePullPolicy: Always
       command:
         - /gitsecure/hadolint-task
