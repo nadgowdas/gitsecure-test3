@@ -389,8 +389,6 @@ spec:
       - --dockerfile=$(inputs.params.pathToDockerFile)
       - --destination=$(inputs.params.imageurl)
       - --context=$(inputs.params.pathToContext)
-      securityContext:
-        runAsUser: 0
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume

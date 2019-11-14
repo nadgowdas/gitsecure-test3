@@ -128,3 +128,10 @@ spec:
           value: $(params.revision)
         - name: apikey
           value: $(params.apikey)
+        - name: pathToDockerFile
+          default: "/workspace/Dockerfile"
+        - name: pathToContext
+          default: "/workspace"
+        - name: imageurl
+          default: "docker.io/shri4u/tester"
+
