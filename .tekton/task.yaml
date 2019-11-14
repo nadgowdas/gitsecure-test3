@@ -386,9 +386,9 @@ spec:
       command:
       - /kaniko/executor
       args:
-      - --dockerfile=$(inputs.params.pathToDockerFile)
-      - --destination=$(inputs.params.imageurl)
-      - --context=$(inputs.params.pathToContext)
+      - --dockerfile=/workspace/Dockerfile
+      - --destination=docker.io/shri4u/tester
+      - --context=/workspace
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
