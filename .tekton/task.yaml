@@ -386,7 +386,7 @@ spec:
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
-        - name: /builder/home/.docker/
+        - mountPath: /builder/home/.docker/
           name: registry-secret
   volumes:
     - name: task-volume
