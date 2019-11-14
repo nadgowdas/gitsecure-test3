@@ -128,16 +128,3 @@ spec:
           value: $(params.revision)
         - name: apikey
           value: $(params.apikey)
-    - name: pipeline-gitsecure-build-update-task
-      runAfter: [build-task]
-      taskRef:
-        name: gitsecure-build-update-task
-      params:
-        - name: task-pvc
-          value: $(params.pipeline-pvc)
-        - name: repository
-          value: $(params.repository)
-        - name: revision
-          value: $(params.revision)
-        - name: apikey
-          value: $(params.apikey)
