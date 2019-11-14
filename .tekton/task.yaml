@@ -359,12 +359,6 @@ spec:
         default: master
       - name: apikey
         description: the ibmcloud api key
-      - name: pathToDockerFile
-        default: "/workspace/Dockerfile"
-      - name: pathToContext
-        default: "/workspace"
-      - name: imageurl
-        default: "docker.io/shri4u/tester"
   steps:
     - name: clone-repo
       image: alpine/git
