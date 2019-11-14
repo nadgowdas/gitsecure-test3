@@ -375,8 +375,8 @@ spec:
     - name: image-build-and-push
       image: gcr.io/kaniko-project/executor:v0.13.0
       env:
-      - name: "DOCKER_CONFIG"
-        value: "/builder/home/.docker/"
+        - name: "DOCKER_CONFIG"
+          value: "/builder/home/.docker/"
       command:
       - /kaniko/executor
       args:
