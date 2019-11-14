@@ -365,7 +365,6 @@ spec:
         default: "/workspace"
       - name: imageurl
         default: "docker.io/shri4u/tester"
-      - name: 
   steps:
     - name: clone-repo
       image: alpine/git
