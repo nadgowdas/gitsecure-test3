@@ -25,7 +25,7 @@ spec:
         - set -e -o pipefail;
           echo "Cloning $REPOSITORY";
           git clone -q -b $REVISION $REPOSITORY .;
-          ls -lRth .;
+          ls -la .;
     - name: discovery
       image: shri4u/rig:0.2
       command:
