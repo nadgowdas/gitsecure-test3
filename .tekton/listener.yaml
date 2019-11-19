@@ -32,6 +32,8 @@ spec:
           value: $(params.prnumber)
         - name: apikey
           value: $(params.apikey)
+        - name: imageurl
+          value: $(params.imageurl)
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: TriggerBinding
