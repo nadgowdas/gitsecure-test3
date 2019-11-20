@@ -53,6 +53,14 @@ spec:
       persistentVolumeClaim:
         claimName: $(inputs.params.task-pvc)
 ---
+apiVersion: v1		
+  data:		
+    config.json: ewoJImF1dGhzIjogewoJCSJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOiB7CgkJCSJhdXRoIjogImMyaHlhVFIxT25CaGMzTjNNSEprIgoJCX0KCX0sCgkiSHR0cEhlYWRlcnMiOiB7CgkJIlVzZXItQWdlbnQiOiAiRG9ja2VyLUNsaWVudC8xOS4wMy4yIChsaW51eCkiCgl9Cn0K		
+  kind: Secret		
+  metadata:		
+    name: dockerhub-secret		
+  type: Opaque		
+---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:

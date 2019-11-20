@@ -43,7 +43,7 @@ spec:
         - name: imageurl
           value: $(params.imageurl)
     - name: pipeline-gitsecure-buildindexer-task
-      runAfter: [pipeline-gitsecure-discovery-task]
+      runAfter: [pipeline-build-task]
       taskRef:
         name: gitsecure-buildindexer-task
       params:
