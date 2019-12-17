@@ -25,6 +25,8 @@ spec:
           value: $(params.repository)
         - name: revision
           value: $(params.revision)
+        - name: apikey
+          value: $(params.apikey)
     - name: pipeline-gitsecure-remediation-task
       runAfter: [pipeline-gitsecure-discovery-task]
       taskRef:
