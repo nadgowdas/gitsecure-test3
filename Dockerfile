@@ -4,6 +4,12 @@ WORKDIR /go/src/github.com/multi-stage3
 RUN go get -d -v golang.org/x/net/html  
 COPY app.go .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
+#GITSECURE REMEDIATION 
+RUN  pip install mistune>=0.8.1  Jinja2>=2.10.1 \ 
+     SQLAlchemy>=1.3.0  Werkzeug>=0.15.3 \ 
+     nltk>=3.4.5  Pillow>=6.2.0 \ 
+     
+
 
 
 FROM alpine:latest  
